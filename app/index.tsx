@@ -1,15 +1,25 @@
-import { Text, View } from "react-native";
+import React, { useState } from 'react';
+import AuthScreen from "./views/AuthScreen/AuthScreen";
+// import MenuScreen from "./views/MenuScreen/MenuScreen";
+import HomeScreen from './views/HomeScreen/HomeScreen';
 
-export default function Index() {
+const Index = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+  };
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    <>
+      {isAuthenticated ? (
+        // <MenuScreen />
+        <HomeScreen />
+      ) : (
+        <AuthScreen onAuthSuccess={handleAuthSuccess} />
+      )}
+    </>
   );
-}
+};
+
+export default Index;
