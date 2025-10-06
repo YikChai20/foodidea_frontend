@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import React from 'react';
+import { StyleSheet, TextInput, View } from 'react-native';
 
 interface Country {
   code: string;
@@ -35,7 +35,7 @@ const PhoneNumberInput = ({
             onValueChange={onCountryChange}
             style={styles.picker}
           >
-            <Picker.Item label="Select" value="" />
+            <Picker.Item label="Country" value="" />
             {countries.map(country => (
               <Picker.Item
                 key={country.phone_code}

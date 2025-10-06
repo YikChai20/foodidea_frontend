@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   input: {
-    height: 40,
+    height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 15,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   passwordContainer: { // ✅ NEW
-    height: 40,
+    height: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
 
   inputWithIcon: {
-    height: 40,
+    height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,

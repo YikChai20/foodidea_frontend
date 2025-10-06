@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import User from "../../models/UserModels";
+import { useEffect, useState } from "react";
+import { showAlert } from '../../../common/alert';
 import { login, signup } from "../../controllers/AuthController";
 import commonController from "../../controllers/CommonController"; // Added import to fetch countries
-
+import User from "../../models/UserModels";
 interface AuthState {
   isLogin: boolean;
   email: string;
@@ -35,6 +35,21 @@ const useAuthController = (onAuthSuccess?: () => void) => {
     phoneNumber: '',          // NEW
     countryList: [],          // NEW
   });
+
+  // ⭐ Splash screen state
+  const [loadingSplashVisible, setLoadingSplashVisible] = useState(false);
+  const [splashMessage, setSplashMessage] = useState('Loading...');
+
+  // ⭐ Trigger splash screen and optional callback after duration
+  const triggerSplash = (message = 'Loading your account...', duration = 2000, callback?: () => void) => {
+    setSplashMessage(message);
+    setLoadingSplashVisible(true);
+
+    setTimeout(() => {
+      setLoadingSplashVisible(false);
+      if (callback) callback();
+    }, duration);
+  };
 
   const toggleMode = () => {
     setAuthState(prev => ({
@@ -84,6 +99,7 @@ const useAuthController = (onAuthSuccess?: () => void) => {
   const handleSubmit = async () => {
     const phone_code = authState.selectedCountryCode;
     const contact_number = phone_code + authState.phoneNumber;
+
     const user = new User(
       phone_code,
       contact_number,
@@ -92,16 +108,93 @@ const useAuthController = (onAuthSuccess?: () => void) => {
       authState.gender,
       authState.birthday
     );
-// console.log("authsatte",authState)
-console.log(111, user)
-    const result = authState.isLogin
-      ? await login(user)
-      : await signup(user);
 
-    // if (result && onAuthSuccess) {
-    //   onAuthSuccess();
-    // }
+    // 🔁 Show splash
+    setSplashMessage(authState.isLogin ? 'Logging in...' : 'Creating account...');
+    setLoadingSplashVisible(true);
+
+    try {
+      const result = authState.isLogin
+        ? await login(user)
+        : await signup(user);
+
+      if (result) {
+        if (authState.isLogin && onAuthSuccess) {
+          onAuthSuccess(); // Go to home
+        } else {
+          setLoadingSplashVisible(false);
+          showAlert('Signup Successful!', "Please proceed to login");
+          toggleMode();
+          return;
+        }
+      } else {
+        console.warn('Signup returned undefined');
+      }
+    } catch (error) {
+      console.error('Login/signup error:', error);
+      // Optionally show a toast or UI error
+    } finally {
+      setLoadingSplashVisible(false); // 🔁 Hide splash
+    }
   };
+
+
+  // const handleSubmit = async () => {
+  //   const phone_code = authState.selectedCountryCode;
+  //   const contact_number = phone_code + authState.phoneNumber;
+
+  //   const user = new User(
+  //     phone_code,
+  //     contact_number,
+  //     authState.password,
+  //     authState.username,
+  //     authState.gender,
+  //     authState.birthday
+  //   );
+
+  //   // 🔁 Start splash
+  //   setSplashMessage('Loading your account...');
+  //   setLoadingSplashVisible(true);
+
+  //   try {
+  //     const result = authState.isLogin
+  //       ? await login(user)
+  //       : await signup(user);
+
+  //     if (result && onAuthSuccess) {
+  //       onAuthSuccess(); // ✅ Navigate or update auth state
+  //     }
+  //   } catch (error) {
+  //     console.error('Login/signup error:', error);
+  //     // Optionally: show toast or error message here
+  //   } finally {
+  //     setLoadingSplashVisible(false); // 🔁 Stop splash
+  //   }
+  // };
+
+//   const handleSubmit = async () => {
+//     const phone_code = authState.selectedCountryCode;
+//     const contact_number = phone_code + authState.phoneNumber;
+//     const user = new User(
+//       phone_code,
+//       contact_number,
+//       authState.password,
+//       authState.username,
+//       authState.gender,
+//       authState.birthday
+//     );
+// // console.log("authsatte",authState)
+//     const result = authState.isLogin
+//       ? await login(user)
+//       : await signup(user);
+
+//     // if (result && onAuthSuccess) {
+//     //   onAuthSuccess();
+//     // }
+//     if (result && onAuthSuccess) {
+//       triggerSplash('Loading your account...', 2000, onAuthSuccess);
+//     }
+//   };
 
   // const isEmailValid = /\S+@\S+\.\S+/.test(authState.email);
 
@@ -141,6 +234,8 @@ console.log(111, user)
     setConfirmPasswordTouched,
     setSelectedCountryCode, // NEW
     setPhoneNumber,         // NEW
+    loadingSplashVisible,   // ⭐ export to UI
+    splashMessage,          // ⭐ export to UI
   };
 };
 

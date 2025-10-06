@@ -1,7 +1,7 @@
 import axios from 'axios';
-import User from '../models/UserModels';
 import { showAlert } from '../../common/alert';
 import config from '../../config.json';
+import User from '../models/UserModels';
 const API_URL = config.API_URL;
 
 export const login = async (user: User): Promise<any> => {
@@ -35,7 +35,7 @@ export const signup = async (user: User): Promise<any> => {
   }
 
   try {
-    await axios.post(`${API_URL}/auth/register`, {
+    const res = await axios.post(`${API_URL}/auth/register`, {
       phone_code: user.phone_code,
       contact_number: user.contact_number,
       password: user.password,
@@ -43,15 +43,15 @@ export const signup = async (user: User): Promise<any> => {
       birthday: user.birthday,
       username: user.username
     });
-    showAlert('Signup Successful!', "Please proceeed to login");
-    // return res.data;
+    // showAlert('Signup Successful!', "Please proceeed to login");
+    return res.data;
   } catch (err: any) {
     const errorMessage =
       err?.response?.data?.message ||   // Error from backend
       err?.message ||                   // Axios error
       'Signup Failed';                   // Fallback
 
-    showAlert('Login Failed', errorMessage);
+    showAlert('Signup Failed', errorMessage);
   }
 };
 

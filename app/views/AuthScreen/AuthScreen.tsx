@@ -16,6 +16,7 @@ import DatePicker from '../../../common/DatePicker/DatePicker'; // adjust path
 import PhoneNumberInput from '../../../common/PhoneNumberInput/PhoneNumberInput'; // Adjust path
 import styles from './AuthScreen.styles';
 import AuthController from './AuthController';
+import SplashScreen from '../../../common/SplashScreen/SplashScreen'
 
 interface AuthScreenProps {
   onAuthSuccess?: () => void;
@@ -50,8 +51,14 @@ const AuthScreen = ({ onAuthSuccess }: AuthScreenProps) => {
     selectedCountryCode,
     setSelectedCountryCode,
     phoneNumber,
-    setPhoneNumber
+    setPhoneNumber,
+    loadingSplashVisible,   // ⭐ new
+    splashMessage,          // ⭐ new
   } = AuthController(onAuthSuccess);
+
+  if (loadingSplashVisible) {
+    return <SplashScreen message={splashMessage} />;
+  }
 
   const Content = (
     <ScrollView
@@ -62,21 +69,6 @@ const AuthScreen = ({ onAuthSuccess }: AuthScreenProps) => {
 
       {isLogin && (
         <>
-          {/* <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            style={styles.input}
-            autoCapitalize="none"
-            autoFocus={true}
-            onBlur={() => setEmailTouched(true)}
-          />
-          {email && emailTouched && !isEmailValid && (
-            <Text style={{ color: 'red', marginBottom: 12, marginTop: -10 }}>
-              Please enter a valid email address.
-            </Text>
-          )} */}
           <PhoneNumberInput
             countries={countryList}
             selectedCountryCode={selectedCountryCode}
@@ -122,27 +114,6 @@ const AuthScreen = ({ onAuthSuccess }: AuthScreenProps) => {
               maxLength={15}
             />
           </View>
-
-          {/* <View>
-            <Text style={styles.label}>
-              Email <Text style={styles.required}>*</Text>
-            </Text>
-
-            <TextInput
-              placeholder="Please enter your email"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              style={styles.input}
-              autoCapitalize="none"
-              onBlur={() => setEmailTouched(true)}
-            />
-          </View>
-          {email && emailTouched && !isEmailValid && (
-            <Text style={{ color: 'red', marginBottom: 12, marginTop: -10 }}>
-              Please enter a valid email address.
-            </Text>
-          )} */}
 
           <>
             <Text style={styles.label}>
@@ -232,98 +203,6 @@ const AuthScreen = ({ onAuthSuccess }: AuthScreenProps) => {
           </View>
         </>
       )}
-
-      {/* <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        style={styles.input}
-        autoCapitalize="none"
-        autoFocus={true}
-        onBlur={() => setEmailTouched(true)}
-      />
-      {email && emailTouched && !isEmailValid && (
-        <Text style={{ color: 'red', marginBottom: 12, marginTop: -10 }}>
-          Please enter a valid email address.
-        </Text>
-      )}
-
-      <View style={styles.inputWrapper}>
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!passwordVisible}
-          style={styles.inputWithIcon}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        <TouchableOpacity
-          onPress={() => setPasswordVisible(!passwordVisible)}
-          style={styles.eyeButton}
-        >
-          <Text style={styles.eyeIcon}>
-            {passwordVisible ? '👁️‍🗨️' : '👁️'}
-          </Text>
-        </TouchableOpacity>
-      </View> */}
-
-      {/* ✅ Confirm Password (Signup only) */}
-      {/* {!isLogin && (
-        <View>
-          <Text style={styles.label}>
-            Confirm Password <Text style={styles.required}>*</Text>
-          </Text>
-
-          <TextInput
-            placeholder="Enter your Confirm Password..."
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry={true}
-            style={styles.input}
-            onBlur={() => setConfirmPasswordTouched(true)}
-          />
-        </View>
-      )}
-      {!isLogin && confirmPasswordTouched && !isConfirmPasswordValid && (
-        <Text style={{ color: 'red', marginBottom: 12, marginTop: -10 }}>
-          Passwords do not match.
-        </Text>
-      )} */}
-
-      {/* ✅ Gender (Signup only) */}
-      {/* {!isLogin && (
-        <View style={styles.genderContainer}>
-          <Text style={styles.label}>Gender <Text style={styles.required}>*</Text></Text>
-          <View style={styles.radioGroup}>
-            {['M', 'F'].map((g) => (
-              <TouchableOpacity
-                key={g}
-                style={styles.radioButton}
-                onPress={() => setGender(g)}
-              >
-                <View style={styles.radioCircle}>
-                  {gender === g && <View style={styles.radioDot} />}
-                </View>
-                <Text style={styles.radioLabel}>{g === 'M' ? 'Male' : 'Female'}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-      )} */}
-
-
-      {/* ✅ Birthday (Signup only) */}
-      {/* {!isLogin && (
-        <View style={styles.datePickerContainer}>
-          <Text style={styles.label}>Birthday <Text style={styles.required}>*</Text></Text>
-          <DatePicker
-            birthday={birthday}
-            setBirthday={setBirthday}
-          />
-        </View>
-      )} */}
 
       <Button
         title={isLogin ? 'Login' : 'Signup'}
