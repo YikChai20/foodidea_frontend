@@ -1,15 +1,12 @@
 import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import HomeScreen from "../HomeScreen/HomeScreen";
-
-const Drawer = createDrawerNavigator();
+import { Text, View } from 'react-native';
+import styles from './MenuScreen.styles';
 
 const MenuScreen = () => {
   return (
-    <Drawer.Navigator initialRouteName="Home">
-      <Drawer.Screen name="Home" component={HomeScreen} />
-      <Drawer.Screen name="XXX" component={HomeScreen} />
-    </Drawer.Navigator>
+    <View style={styles.container}>
+      <Text style={styles.text}>Welcome to the Menu Screen!</Text>
+    </View>
   );
 };
 

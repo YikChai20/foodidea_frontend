@@ -1,28 +1,33 @@
 import React from 'react';
 import {
-  View,
-  Text,
-  TextInput,
   Button,
-  TouchableOpacity,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
+  View,
 } from 'react-native';
 // import DateTimePicker from '@react-native-community/datetimepicker';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import DatePicker from '../../../common/DatePicker/DatePicker'; // adjust path
 import PhoneNumberInput from '../../../common/PhoneNumberInput/PhoneNumberInput'; // Adjust path
-import styles from './AuthScreen.styles';
+import SplashScreen from '../../../common/SplashScreen/SplashScreen';
+import type { RootStackParamList } from '../../routes/AppNavigator'; // Adjust path
 import AuthController from './AuthController';
-import SplashScreen from '../../../common/SplashScreen/SplashScreen'
+import styles from './AuthScreen.styles';
 
 interface AuthScreenProps {
   onAuthSuccess?: () => void;
 }
 
 const AuthScreen = ({ onAuthSuccess }: AuthScreenProps) => {
+  type AuthScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Auth'>;
+  const navigation = useNavigation<AuthScreenNavigationProp>();
   const {
     email,
     password,
@@ -54,7 +59,14 @@ const AuthScreen = ({ onAuthSuccess }: AuthScreenProps) => {
     setPhoneNumber,
     loadingSplashVisible,   // ⭐ new
     splashMessage,          // ⭐ new
-  } = AuthController(onAuthSuccess);
+  } = AuthController(() => {
+    // This will be called on successful auth
+    if (onAuthSuccess) {
+      onAuthSuccess();
+    }
+    // Navigate to Tabs and replace the current screen
+    navigation.replace('pages');
+  });
 
   if (loadingSplashVisible) {
     return <SplashScreen message={splashMessage} />;

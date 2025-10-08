@@ -1,25 +1,9 @@
-import React, { useState } from 'react';
-import AuthScreen from "./views/AuthScreen/AuthScreen";
-// import MenuScreen from "./views/MenuScreen/MenuScreen";
-import HomeScreen from './views/HomeScreen/HomeScreen';
+// app/index.tsx
+import React from 'react';
+import AppNavigator from './routes/AppNavigator'; // Adjust path if needed
 
 const Index = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const handleAuthSuccess = () => {
-    setIsAuthenticated(true);
-  };
-
-  return (
-    <>
-      {isAuthenticated ? (
-        // <MenuScreen />
-        <HomeScreen />
-      ) : (
-        <AuthScreen onAuthSuccess={handleAuthSuccess} />
-      )}
-    </>
-  );
+  return <AppNavigator />;
 };
 
 export default Index;
